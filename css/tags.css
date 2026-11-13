@@ -1,0 +1,82 @@
+@font-face {
+  font-family: "fontawesome";
+  src: url("/font-awesome/webfonts/fa-solid-900.eot");
+  src: url("/font-awesome/webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("/font-awesome/webfonts/fa-solid-900.woff") format("woff"), url("/font-awesome/webfonts/fa-solid-900.ttf") format("truetype"), url("/font-awesome/webfonts/fa-solid-900.svg#micon") format("svg");
+}
+#category {
+  width: auto;
+  margin: 0 14vw;
+  padding: 30px 0;
+}
+h1 {
+  font-size: 25px;
+  color: #fff;
+  padding: 15px 0;
+  display: block;
+  border-bottom: #808080 solid 1px;
+}
+.category-list,
+.tag-list {
+  margin: 10px 0;
+}
+.category-list li,
+.tag-list li {
+  display: inline-block;
+  background-color: #62b900;
+  margin: 10px;
+  padding: 5px;
+  border-radius: 2px;
+}
+.category-list li:hover,
+.tag-list li:hover {
+  background-color: #fff;
+}
+.category-list li:hover a,
+.tag-list li:hover a {
+  color: #000;
+}
+.category-list li a,
+.tag-list li a {
+  color: #fff;
+  text-decoration: none;
+}
+.category-list li .category-list-count,
+.tag-list li .category-list-count,
+.category-list li .tag-list-count,
+.tag-list li .tag-list-count {
+  padding-left: 7px;
+  font-weight: bold;
+}
+/* ---------- 莫兰迪低饱和配色（标签与分类统一，8 色循环） ---------- */
+.tag-list li:nth-child(8n+1),
+.category-list li:nth-child(8n+1) {
+  background-color: #a67c6d;
+}
+.tag-list li:nth-child(8n+2),
+.category-list li:nth-child(8n+2) {
+  background-color: #8c9a7c;
+}
+.tag-list li:nth-child(8n+3),
+.category-list li:nth-child(8n+3) {
+  background-color: #7d8ca3;
+}
+.tag-list li:nth-child(8n+4),
+.category-list li:nth-child(8n+4) {
+  background-color: #b08a8a;
+}
+.tag-list li:nth-child(8n+5),
+.category-list li:nth-child(8n+5) {
+  background-color: #8e7d9b;
+}
+.tag-list li:nth-child(8n+6),
+.category-list li:nth-child(8n+6) {
+  background-color: #a99070;
+}
+.tag-list li:nth-child(8n+7),
+.category-list li:nth-child(8n+7) {
+  background-color: #6f8f8a;
+}
+.tag-list li:nth-child(8n+8),
+.category-list li:nth-child(8n+8) {
+  background-color: #9c7b8b;
+}

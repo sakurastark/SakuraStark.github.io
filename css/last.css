@@ -1,0 +1,261 @@
+@font-face {
+  font-family: "fontawesome";
+  src: url("/font-awesome/webfonts/fa-solid-900.eot");
+  src: url("/font-awesome/webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("/font-awesome/webfonts/fa-solid-900.woff") format("woff"), url("/font-awesome/webfonts/fa-solid-900.ttf") format("truetype"), url("/font-awesome/webfonts/fa-solid-900.svg#micon") format("svg");
+}
+body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+/*background-color: #ddd;*/
+}
+body::-webkit-scrollbar-thumb {
+/*滚动条里面小方块*/
+  border-radius: 10'px';
+  background-color: #62b900;
+  background-image: -webkit-linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, transparent 75%, transparent);
+}
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #777;
+}
+body::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+html {
+  overflow-x: hidden;
+}
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background-color: #202020;
+}
+#content-outer {
+  margin-top: 75px;
+}
+/* 归档页：文章缩略图（小图左、文字右） */
+.timeline-content .post-content {
+  overflow: hidden;
+}
+.timeline-content .post-content:has(.archive-cover) {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  column-gap: 16px;
+  row-gap: 6px;
+  align-items: start;
+}
+.timeline-content .archive-cover {
+  grid-column: 1;
+  grid-row: 1/span 2;
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+}
+.timeline-content .archive-cover img {
+  width: 190px;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+.timeline-content .archive-cover:hover img {
+  transform: scale(1.05);
+}
+.timeline-content .post-content:has(.archive-cover) .timeline-title {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+}
+.timeline-content .post-content:has(.archive-cover) > p {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+}
+@media (max-width: 768px) {
+  .timeline-content .post-content:has(.archive-cover) {
+    grid-template-columns: 1fr;
+  }
+  .timeline-content .archive-cover {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .timeline-content .archive-cover img {
+    width: 100%;
+    height: 150px;
+  }
+  .timeline-content .post-content:has(.archive-cover) .timeline-title {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .timeline-content .post-content:has(.archive-cover) > p {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+/* 时间轴左侧条目：图放右侧（贴时间轴），文字在左列右对齐，避免图文被拉开 */
+@media (min-width: 769px) {
+  .timeline-item:nth-of-type(2n) .timeline-content .post-content:has(.archive-cover) {
+    grid-template-columns: 1fr 190px;
+  }
+  .timeline-item:nth-of-type(2n) .timeline-content .archive-cover {
+    grid-column: 2;
+  }
+  .timeline-item:nth-of-type(2n) .timeline-content .post-content:has(.archive-cover) .timeline-title {
+    grid-column: 1;
+  }
+  .timeline-item:nth-of-type(2n) .timeline-content .post-content:has(.archive-cover) > p {
+    grid-column: 1;
+  }
+}
+/* 文章卡片（移植 Butterfly Plus Card，适配浅色文章页） */
+.bf-grid {
+  display: grid;
+  gap: 18px;
+  margin: 18px 0;
+}
+.bf-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.bf-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.bf-grid.cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+.bf-grid .bf-card-link {
+  margin: 0;
+}
+@media (max-width: 900px) {
+  .bf-grid.cols-3,
+  .bf-grid.cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .bf-grid.cols-2,
+  .bf-grid.cols-3,
+  .bf-grid.cols-4 {
+    grid-template-columns: 1fr;
+  }
+}
+.bf-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  margin: 18px 0;
+}
+.bf-card-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+.bf-card {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.bf-card-link:hover .bf-card {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+  border-color: rgba(98,185,0,0.5);
+}
+.bf-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.bf-card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.bf-card-icon {
+  font-size: 16px;
+  color: #4a9e2f;
+}
+.bf-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #2b2b2b;
+}
+.bf-card-tag {
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.bf-card-body {
+  color: #5a5a5a;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.bf-card-body p:first-child {
+  margin-top: 0;
+}
+.bf-card-body p:last-child {
+  margin-bottom: 0;
+}
+.bf-card.default {
+  border-left: 4px solid #909399;
+}
+.bf-card.primary {
+  border-left: 4px solid #425aef;
+}
+.bf-card.info {
+  border-left: 4px solid #49b1f5;
+}
+.bf-card.success {
+  border-left: 4px solid #57bd6a;
+}
+.bf-card.warning {
+  border-left: 4px solid #ffb302;
+}
+.bf-card.danger {
+  border-left: 4px solid #f56c6c;
+}
+.bf-card.default .bf-card-tag {
+  background: #909399;
+}
+.bf-card.primary .bf-card-tag {
+  background: #425aef;
+}
+.bf-card.info .bf-card-tag {
+  background: #49b1f5;
+}
+.bf-card.success .bf-card-tag {
+  background: #57bd6a;
+}
+.bf-card.warning .bf-card-tag {
+  background: #ffb302;
+}
+.bf-card.danger .bf-card-tag {
+  background: #f56c6c;
+}
+/* 粘性页脚：内容不足一屏时，页脚仍贴底 */
+html {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+#content-outer {
+  flex: 1 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+#bottom-outer {
+  flex: 0 0 auto;
+  margin-top: auto;
+  width: 100%;
+}
