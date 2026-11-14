@@ -259,3 +259,70 @@ body {
   margin-top: auto;
   width: 100%;
 }
+/* ============================================================
+   全局迷你播放器（左下角吸附）
+   ============================================================ */
+#global-aplayer.aplayer-fixed {
+  z-index: 1200;
+  max-width: 340px;
+}
+#global-aplayer.aplayer-fixed .aplayer-body {
+  z-index: 1200;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.28);
+}
+/* 迷你态：右上角圆角，和页面留一点呼吸 */
+#global-aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+  border-radius: 0 8px 0 0;
+  overflow: hidden;
+}
+#global-aplayer.aplayer-fixed .aplayer-list {
+  max-height: 42vh;
+}
+#global-aplayer.aplayer-fixed .aplayer-info {
+  border-top-color: rgba(0,0,0,0.07);
+}
+@media (max-width: 768px) {
+  #global-aplayer.aplayer-fixed {
+    max-width: 100%;
+  }
+  #global-aplayer.aplayer-fixed .aplayer-list {
+    max-height: 46vh;
+  }
+}
+/* ============================================================
+   pjax：顶部进度条 + 换页时的轻微过渡
+   ============================================================ */
+#pjax-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: #7cc242;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: width 0.25s ease, opacity 0.2s ease;
+}
+#pjax-progress.on {
+  opacity: 1;
+  width: 70%;
+}
+#pjax-progress.done {
+  width: 100%;
+  opacity: 0;
+}
+body.pjax-loading #content-outer {
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+/* Music 页的大播放器：别顶满屏 */
+#music-aplayer {
+  max-width: 880px;
+  margin: 30px auto 46px;
+}
+@media (max-width: 820px) {
+  #music-aplayer {
+    margin: 18px auto 32px;
+  }
+}

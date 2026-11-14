@@ -1,10 +1,12 @@
-/* 图库交互：灯箱 / 索引页翻页 / 相册内页翻页 */
+/* 图库交互：灯箱 / 索引页翻页 / 相册内页翻页
+ * 委托到 document 的监听只绑一次；每页的翻页逻辑在 init() 里重建。
+ */
 (function () {
   'use strict';
 
-  /* ---------- 1. 灯箱 ---------- */
   var dlg, imgEl, list = [], idx = 0;
 
+  /* ---------- 1. 灯箱 ---------- */
   function buildLightbox() {
     dlg = document.createElement('dialog');
     dlg.id = 'gallery-lightbox';
@@ -12,12 +14,6 @@
     dlg.appendChild(imgEl);
     document.body.appendChild(dlg);
     dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
-    document.addEventListener('keydown', function (e) {
-      if (!dlg || !dlg.open) return;
-      if (e.key === 'ArrowRight') { e.preventDefault(); show(idx + 1); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); show(idx - 1); }
-      else if (e.key === 'Escape') dlg.close();
-    });
   }
 
   function show(i) {
@@ -28,25 +24,10 @@
     imgEl.alt = inner ? inner.alt : '';
   }
 
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest ? e.target.closest('.gallery-item') : null;
-    if (!a) return;
-    e.preventDefault();
-    if (!dlg) buildLightbox();
-    var scope = a.closest('.album-book') || a.closest('.gallery-grid') || document;
-    list = Array.prototype.slice.call(scope.querySelectorAll('.gallery-item'));
-    show(list.indexOf(a));
-    dlg.showModal();
-  });
-
-  /* ---------- 2. 索引页：点击相册卡槽，整页翻转后跳转 ---------- */
+  /* ---------- 2. 索引页：整页翻转后进入相册 ---------- */
   var overlay;
-  document.addEventListener('click', function (e) {
-    var slot = e.target.closest ? e.target.closest('.book .album-slot') : null;
-    if (!slot) return;
-    var href = slot.getAttribute('href');
-    if (!href) return;
-    e.preventDefault();
+
+  function flipTo(href) {
     if (!overlay) {
       overlay = document.createElement('div');
       overlay.className = 'page-flip';
@@ -55,10 +36,18 @@
     overlay.classList.remove('out');
     void overlay.offsetWidth;
     requestAnimationFrame(function () { overlay.classList.add('out'); });
-    setTimeout(function () { window.location.href = href; }, 720);
-  });
+    setTimeout(function () {
+      if (window.PJAX) window.PJAX.go(href);
+      else window.location.href = href;
+    }, 720);
+    setTimeout(function () {
+      if (overlay) overlay.classList.remove('out');
+    }, 1400);
+  }
 
   /* ---------- 3. 相册内页：左右翻页 ---------- */
+  window.__book = null;
+
   function setupBook(book) {
     var spreads = book.querySelectorAll('.album-book-spread');
     var counter = book.querySelector('.album-book-counter .cur');
@@ -78,20 +67,64 @@
     if (prev) prev.addEventListener('click', function () { if (cur > 0) { cur--; render(); } });
     if (next) next.addEventListener('click', function () { if (cur < spreads.length - 1) { cur++; render(); } });
 
-    document.addEventListener('keydown', function (e) {
-      if (dlg && dlg.open) return;
-      if (e.key === 'ArrowLeft' && cur > 0) { cur--; render(); }
-      if (e.key === 'ArrowRight' && cur < spreads.length - 1) { cur++; render(); }
-    });
-
     render();
+
+    return {
+      step: function (d) {
+        var n = cur + d;
+        if (n < 0 || n >= spreads.length) return;
+        cur = n;
+        render();
+      }
+    };
   }
 
   function init() {
+    window.__book = null;
     var books = document.querySelectorAll('.album-book');
-    for (var i = 0; i < books.length; i++) setupBook(books[i]);
+    for (var i = 0; i < books.length; i++) {
+      window.__book = setupBook(books[i]);
+    }
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  /* ---------- 委托监听：只绑一次 ---------- */
+  if (!window.__galleryBound) {
+    window.__galleryBound = true;
+
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t || !t.closest) return;
+
+      var item = t.closest('.gallery-item');
+      if (item) {
+        e.preventDefault();
+        if (!dlg) buildLightbox();
+        var scope = item.closest('.album-book') || item.closest('.gallery-grid') || document;
+        list = Array.prototype.slice.call(scope.querySelectorAll('.gallery-item'));
+        show(list.indexOf(item));
+        dlg.showModal();
+        return;
+      }
+
+      var slot = t.closest('.book .album-slot');
+      if (slot && slot.getAttribute('href')) {
+        e.preventDefault();
+        flipTo(slot.getAttribute('href'));
+      }
+    }, false);
+
+    document.addEventListener('keydown', function (e) {
+      if (dlg && dlg.open) {
+        if (e.key === 'ArrowRight') { e.preventDefault(); show(idx + 1); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); show(idx - 1); }
+        else if (e.key === 'Escape') dlg.close();
+        return;
+      }
+      if (!window.__book) return;
+      if (e.key === 'ArrowLeft') window.__book.step(-1);
+      if (e.key === 'ArrowRight') window.__book.step(1);
+    });
+  }
+
+  if (window.LP) window.LP.add(init);
 })();
