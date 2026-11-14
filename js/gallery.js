@@ -33,16 +33,24 @@
       overlay.className = 'page-flip';
       document.body.appendChild(overlay);
     }
-    overlay.classList.remove('out');
-    void overlay.offsetWidth;
-    requestAnimationFrame(function () { overlay.classList.add('out'); });
+    var ov = overlay;
+    ov.classList.remove('out');
+    void ov.offsetWidth;
+    requestAnimationFrame(function () { ov.classList.add('out'); });
+
     setTimeout(function () {
       if (window.PJAX) window.PJAX.go(href);
       else window.location.href = href;
     }, 720);
+
+    // 动画放完必须把遮罩从 DOM 里删掉。
+    // 原来这里只是去掉 .out，遮罩会回到不透明状态（z-index 9999、整屏），
+    // 而它挂在 body 上、pjax 换页不会替换它 —— 于是新页面被一张米色毯子盖住，
+    // 看起来就是「进了相册要刷新一下才显示」。
     setTimeout(function () {
-      if (overlay) overlay.classList.remove('out');
-    }, 1400);
+      if (ov.parentNode) ov.parentNode.removeChild(ov);
+      if (overlay === ov) overlay = null;
+    }, 1500);
   }
 
   /* ---------- 3. 相册内页：左右翻页 ---------- */
