@@ -79,3 +79,17 @@ a.toc-link {
   background-color: #fff;
   border: solid 3px #62b900;
 }
+/* 目录层级编号（2.1.1.3.），格式与 Butterfly 的 toc.number 一致 */
+.toc-number {
+  color: #9b9b9b;
+  font-size: 12px;
+  margin-right: 3px;
+  letter-spacing: 0.2px;
+}
+.is-active-link .toc-number {
+  color: #6f8f6a;
+}
+/* 带上编号之后缩进会变宽，深层目录收一点，避免文字被挤成一条 */
+#tocs .toc-list .toc-list {
+  padding-left: 12px;
+}
